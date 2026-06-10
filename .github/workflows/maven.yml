@@ -18,15 +18,11 @@ name: Build
 
 on:
   # Enable manual re-run
-  workflow_dispatch: { }
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: 'Check out repository'
@@ -67,4 +63,11 @@ jobs:
         shell: bash
         run: |
           ./test_ci.sh ${{ github.event.pull_request.user.login }}
-        if: github.event_name == 'pull_request'
+        if: always()
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+      fail-fast: false
