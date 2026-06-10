@@ -18,11 +18,7 @@ name: Build
 
 on:
   # Enable manual re-run
-  workflow_dispatch: { }
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -67,4 +63,6 @@ jobs:
         shell: bash
         run: |
           ./test_ci.sh ${{ github.event.pull_request.user.login }}
-        if: github.event_name == 'pull_request'
+        if: always()
+    strategy:
+      fail-fast: false
